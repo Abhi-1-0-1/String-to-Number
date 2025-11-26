@@ -19,7 +19,11 @@ values = {
 n = input("String: ").lower().strip()
 words = n.split()
 words = [word for word in words if word != "and"]
-
+if words[0] in ["minus", "negative"]:
+    words = words[1:]
+    negative = True
+else:
+    negative = False
 # Split the words by large number multiples    
 split_by_multiples = []
 for i in words:
@@ -43,5 +47,6 @@ number = sum(split_by_multiples)
 
 # Add commas to the number for readability
 number_with_commas = "{:,}".format(number)
-
+if negative:
+    number_with_commas = "-" + number_with_commas
 print("Number:", number_with_commas)
