@@ -12,41 +12,82 @@ values = {
     "thousand": 1000,
     "million": 1000000,
     "billion": 1000000000,
-    "trillion": 1000000000000
+    "trillion": 1000000000000,
+    "quadrillion": 1000000000000000,
+
+    "minus": -1
 }
 
-#Take input from user and clean it
-n = input("String: ").lower().strip()
-words = n.split()
-words = [word for word in words if word != "and"]
-if words[0] in ["minus", "negative"]:
-    words = words[1:]
-    negative = True
-else:
-    negative = False
-# Split the words by large number multiples    
-split_by_multiples = []
-for i in words:
-    if i in list(values.keys())[list(values.keys()).index("thousand"):]:
-        split_by_multiples.append(words[:words.index(i)+1])
-        words = words[words.index(i)+1:]
+negative = False
 
-split_by_multiples.append(words)
+try:
+    # Take input from user and clean it
+    n = input("String: ").lower().strip()
+    
+    # Error Handling: Check if input is empty
+    if not n:
+        raise ValueError("The input string is empty. Please enter a number in words.")
 
-# Calculate the numeric value for each segment
-for index, segment in enumerate(split_by_multiples):
-    temp = 0
-    for word in segment:
-        value = values[word]
-        if word in list(values.keys())[list(values.keys()).index("hundred"):]:
-            temp *= value
-        else:
-            temp += value
-    split_by_multiples[index] = temp
-number = sum(split_by_multiples)
+    words = n.split()
 
-# Add commas to the number for readability
-number_with_commas = "{:,}".format(number)
-if negative:
-    number_with_commas = "-" + number_with_commas
-print("Number:", number_with_commas)
+    # Clean "and" from the list
+    words = [word for word in words if word != "and"]
+
+    # Handle negative numbers
+    if words[0] == "minus":
+        negative = True
+        words.pop(0)
+        # Error Handling: Check if "minus" is followed by a number
+        if not words:
+            raise ValueError("The word 'minus' must be followed by a number.")
+
+    # Split the words by large number multiples    
+    split_by_multiples = []
+    current_segment = []
+
+    for i in words:
+        # Error Handling: Check if word exists in our dictionary
+        if i not in values:
+            raise KeyError(f"The word '{i}' is not a recognized number or is formatted incorrectly.")
+            
+        current_segment.append(i)
+        if i in ["thousand", "million", "billion", "trillion", "quadrillion"]:
+            split_by_multiples.append(current_segment)
+            current_segment = []
+            
+    # Append the remaining words
+    if current_segment:
+        split_by_multiples.append(current_segment)
+
+    # Calculate the numeric value for each segment
+    for index, segment in enumerate(split_by_multiples):
+        temp = 0
+        for word in segment:
+            value = values[word]
+            if word == "hundred":
+                # If hundred is at start of segment
+                if temp == 0: temp = 1
+                temp *= value
+            elif word in ["thousand", "million", "billion", "trillion", "quadrillion"]:
+                # If multiple is at start of segment
+                if temp == 0: temp = 1
+                temp *= value
+            else:
+                temp += value
+
+        split_by_multiples[index] = temp
+
+    number = sum(split_by_multiples)
+    number = -1*number if negative else number
+
+    # Add commas to the number for readability
+    number_with_commas = "{:,}".format(number)
+
+    print("Number:", number_with_commas)
+
+except KeyError as e:
+    print(f"Input Error: {e}")
+except ValueError as e:
+    print(f"Value Error: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
