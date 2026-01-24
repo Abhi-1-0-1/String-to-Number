@@ -1,6 +1,6 @@
 # String-to-Number Converter
 
-A Python script that converts English word representations of numbers (e.g., "one million two hundred thousand") into formatted integers (e.g., 1,200,000).
+A Python script that converts English word representations of numbers (e.g., "one million two hundred thousand sixty seven") into formatted integers (e.g., 1,200,067).
 
 ## Features
 
@@ -32,4 +32,4 @@ The script includes specific feedback for common user errors:
 
 1. Run the script:
    ```bash
-   python converter.py
+   python num.py
