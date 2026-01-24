@@ -1,4 +1,5 @@
 # Python program to convert natural language number strings into integer values.
+# Github repository: https://github.com/Abhi-1-0-1/String-to-Number
 
 # Mapping of number words to integer values
 VALUES = {
@@ -70,7 +71,7 @@ def main():
         user_input = input("String: ")
         number = convert(user_input)
         
-        # Output with thousands separator (e.g., 1,000)
+        # Output with thousands separator
         print(f"Number: {number:,}")
 
     except (ValueError, KeyError) as e:
