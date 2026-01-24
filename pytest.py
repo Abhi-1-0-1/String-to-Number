@@ -1,5 +1,5 @@
 import pytest
-from num import convert
+from converter import convert
 
 class TestBasicConversions:
     def test_single_digits(self):
